@@ -1,0 +1,11 @@
+streamlit
+pandas
+scikit-learn
+fastapi
+uvicorn
+pydantic
+matplotlib
+seaborn
+jupyter
+notebook
+pickle-mixin
