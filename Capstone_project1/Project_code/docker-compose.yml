@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  manufacturing-app:
+    build: .
+    ports:
+      - "8504:8504"
+    volumes:
+      - ./manufacturing_model.pkl:/app/manufacturing_model.pkl:ro
+      - ./manufacturing_dataset_1000_samples.csv:/app/manufacturing_dataset_1000_samples.csv:ro
+    environment:
+      - PYTHONPATH=/app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8504/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Add a Jupyter notebook service for development
+  jupyter:
+    build: .
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/app
+      - /app/__pycache__
+    environment:
+      - JUPYTER_TOKEN=manufacturing
+    command: jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token='manufacturing'
+    profiles:
+      - dev
